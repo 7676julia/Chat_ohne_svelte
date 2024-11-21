@@ -1,5 +1,6 @@
 form {
     display: flex;  
+    flex-direction: column;
 }
 
 label {
@@ -26,6 +27,8 @@ input[type=button] {
     color:white;
     margin: 4px 2px;
     padding: 16px 32px;
+    width: 200px;
+    margin: auto;
 }
 
 button {
@@ -34,6 +37,8 @@ button {
     color:white;
     margin: 4px 2px;
     padding: 16px 32px;
+    width: 200px;
+    margin: auto;
 }
 
 input[type=submit] {
@@ -42,6 +47,9 @@ input[type=submit] {
     color:white;
     margin: 4px 2px;
     padding: 16px 32px;
+    width: 200px;
+    margin: auto;
+
 }
 
 a {
@@ -51,6 +59,5 @@ a {
 
 .leftL {
     float: left; 
-    margin-right: 10px; 
-    color: rgb(162, 68, 90);
+    color:blue
 }
