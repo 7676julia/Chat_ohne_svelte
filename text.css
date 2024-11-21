@@ -1,0 +1,72 @@
+img {
+    border-radius: 50%;
+}
+
+body {
+    background-color: #f9f9f9;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+div {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: left; /* Falls du den Text links ausrichten möchtest */
+}
+
+hr {
+    border: 1px dotted #ccc;
+}
+
+h1 {
+    color: gray;
+    font-size: 2em;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+fieldset {
+    border: 1px dotted #ccc;
+    padding: 10px;
+    margin: 10px auto;
+    max-width: 400px;
+    
+}
+ul{
+    list-style-type: none;
+    text-align: left;
+}
+ul li{
+    margin-bottom: 20px;
+}
+.messageCount {
+    float: right; 
+    color: white; 
+    padding: 5px 5px;
+    justify-content: center;
+    background-color:blue; /* Hintergrundfarbe */
+    display: inline-block; /* Damit der Rahmen um den Text herum funktioniert */
+    margin-left: 5px; /* Abstand zu anderen Elementen */
+    height: 20px;
+}
+
+
+img {
+    border-radius: 50%;
+}
+
+label {
+    text-align: right;
+    padding-right: 20px;
+    box-sizing: border-box;
+
+}
+input[type="text"]{
+    box-sizing: border-box;
+    font-size: 1em;
+    margin-bottom: 10px;
+    margin-right: 5em;
+    border: 1px solid #999;
+    padding: 5px 10px;
+}  
