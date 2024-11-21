@@ -1,6 +1,5 @@
-
-img {
-    border-radius: 50%;
+form {
+    display: flex;  
 }
 
 label {
@@ -17,8 +16,19 @@ input[type="text"]{
     border: 1px solid #999;
     padding: 5px 10px;
 }  
+#eintragFeld {
+    flex-grow: 1;
+}
 
 input[type=button] {
+    border: none;
+    background-color: grey;
+    color:white;
+    margin: 4px 2px;
+    padding: 16px 32px;
+}
+
+button {
     border: none;
     background-color: grey;
     color:white;
@@ -35,6 +45,12 @@ input[type=submit] {
 }
 
 a {
-    color: black; 
-    text-decoration: none; 
+    text-decoration: none;
+    color: blue;
+}
+
+.leftL {
+    float: left; 
+    margin-right: 10px; 
+    color: rgb(162, 68, 90);
 }
