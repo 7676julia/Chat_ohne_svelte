@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,28 +8,33 @@
     <link rel="stylesheet" href="text.css">
     <link rel="stylesheet" href="formulareLinks.css">
 </head>
+
 <body>
     <img src="images/user.png" style="height: 100px">
     <h1>Register yourself</h1>
-
-    
     <form action="freundeliste.html" method="get">
-    <fieldset>
-    <legend>Register</legend>
-        <label for="eintragFeld"> Username:</label>
-        <input type='text' id='eintragFeld'><br>
-        <label for='eintragFeld'> Passwort:</label>
-        <input type='text' id='eintragFeld' name='eintrag' ><br>
-            <label for='eintragFeld'> Confirm Passwort:</label>
-            <input type='text' id='eintragFeld' name='eintrag' ><br>
-    </fieldset>
+        <fieldset>
+            <div class="field">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Enter your username">
+            </div>
+            <div class="field">
+                <label for="password">Password</label>
+                <input type="text" id="password" placeholder="Enter your password">
+            </div>
+            <div class="field">
+                <label for="confirm">Confirm Password</label>
+                <input type="text" id="confirm" placeholder="Confirm your password">
+            </div>
+        </fieldset>
+        <div class="button-container">
+            <a href="login.html">
+                <input type="button" value="Cancel">
+            </a>
 
-        <a href="login.html">
-            <input type="button" value="Cancel">
-        </a>
-
-        <input type="submit" value="Create Account">
-    
+            <input type="submit" value="Create Account">
+        </div>
     </form>
 </body>
+
 </html>
