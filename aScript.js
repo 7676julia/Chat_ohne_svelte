@@ -1,12 +1,25 @@
-// Dummy-Datensatz der existierenden Nutzer
-const existingUsers = ["Alice", "Bob", "Charlie"];
+// Variable für die Benutzernamen, die vom Server zurückgegeben werden
+let existingUsers = [];
 
-const xmlhttp = new XMLHttpRequest(); xmlhttp.onreadystatechange = function () {
-    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) { let data = JSON.parse(xmlhttp.responseText); console.log(data);
-    } };
-    // Chat Server URL und Collection ID als Teil der URL
-    xmlhttp.open("GET", backendUrl + "/user", true);
-    // Das Token zur Authentifizierung, wenn notwendig xmlhttp.setRequestHeader('Authorization', 'Bearer ' + token); xmlhttp.send();
+// XMLHttpRequest, um die Benutzernamen vom Server abzurufen
+const xmlhttp = new XMLHttpRequest();
+xmlhttp.onreadystatechange = function () {
+    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+        let data = JSON.parse(xmlhttp.responseText);
+        existingUsers = data; // Benutzerliste speichern
+        console.log("Benutzerliste vom Server:", existingUsers);
+    }
+};
+
+// Chat Server URL und Collection ID als Teil der URL
+xmlhttp.open("GET", window.backendUrl + "/user", true);
+
+// Das Token zur Authentifizierung
+xmlhttp.setRequestHeader('Authorization', 'Bearer ' + window.token);
+
+// Anfrage senden
+xmlhttp.send();
+
 
 // Funktion zur Überprüfung der Eingaben
 function validateInput(field, isValid) {
@@ -24,10 +37,11 @@ function validateInput(field, isValid) {
 // Benutzername-Validierung
 function validateUsername() {
     const username = document.getElementById("username");
+    // Prüfen, ob der Benutzername in der Liste der bestehenden Benutzer vorhanden ist
     const isValid = username.value.length >= 3 && !existingUsers.includes(username.value);
     validateInput(username, isValid);
-    return isValid;
-}
+        return isValid;
+    }
 
 // Passwort-Validierung
 function validatePassword() {
@@ -73,15 +87,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 // Formular-Validierung
-function validateForm(event) {
-    const isUsernameValid = validateUsername();
-    const isPasswordValid = validatePassword();
-    const isPasswordRepeatValid = validatePasswordRepeat();
+form.addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent form submission
+    validateForm(event); // Run the centralized validation logic
+});
 
-    if (!isUsernameValid || !isPasswordValid || !isPasswordRepeatValid) {
-        event.preventDefault(); // Verhindert das Absenden des Formulars
-    }
-}
 
 });
 
