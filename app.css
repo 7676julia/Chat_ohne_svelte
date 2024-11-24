@@ -1,0 +1,219 @@
+/* Allgemeine Regeln */
+body {
+    background-color: #f9f9f9;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+div {
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+hr {
+    border: 1px dotted #ccc;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+h1 {
+    color: gray;
+    font-size: 2em;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+h1.left {
+    text-align: left;
+}
+
+h2 {
+    text-align: left;
+    color: gray;
+    font-size: 1.5em;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+fieldset {
+    border: 1px dotted #ccc;
+    padding: 10px;
+    margin: 10px auto;
+    max-width: 800px;
+}
+
+legend {
+    text-align: left;
+}
+
+/* Listen */
+ul {
+    list-style-type: none;
+    text-align: left;
+    background-color: white;
+    margin: 20px 0;
+    padding: 20px;
+    border-style: solid;
+    border-color: #ccc;
+    border-radius: 5px;
+    border-width: 1px;
+}
+
+ul li {
+    margin-bottom: 20px;
+}
+
+ol {
+    text-align: left;
+}
+
+/* Profilbilder */
+img {
+    border-radius: 50%;
+}
+
+#profilPicture {
+    border-radius: 0%;
+    width: 300px;
+}
+
+/* Nachrichten */
+.messageCount {
+    float: right;
+    color: white;
+    padding: 5px 5px;
+    justify-content: center;
+    background-color: blue;
+    display: inline-block;
+    margin-left: 5px;
+    height: 20px;
+}
+
+/* Chat */
+.chat {
+    background-color: white;
+    width: 100%;
+    border-radius: 10px;
+    margin: 10px auto;
+    border: 1px solid #ccc;
+    display: inline-block;
+    text-align: left;
+    padding: 10px;
+}
+
+/* Formulare */
+form {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    flex-direction: row;
+}
+
+label {
+    text-align: right;
+    padding-right: 10px;
+    box-sizing: border-box;
+    display: inline-block;
+    flex-shrink: 0;
+    width: 200px;
+}
+
+input[type="text"], input[type="password"] {
+    box-sizing: border-box;
+    font-size: 1em;
+    margin-bottom: 10px;
+    margin-right: 5em;
+    border: 1px solid #999;
+    padding: 5px 10px;
+    flex-grow: 1;
+    width: 300px;
+}
+
+#eintragFeld {
+    flex-grow: 1;
+}
+
+/* Buttons */
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+input[type="button"], button {
+    border: none;
+    background-color: grey;
+    color: white;
+    padding: 16px 32px;
+    width: 200px;
+    font-size: 1em;
+}
+
+input[type="button"] {
+    margin: 25px 2px;
+}
+
+button {
+    margin: 100px 2px;
+    margin: auto;
+}
+
+input[type="submit"] {
+    border: none;
+    background-color: blue;
+    color: white;
+    margin: 4px 2px;
+    padding: 16px 32px;
+    width: 200px;
+    margin: auto;
+    font-size: 1em;
+}
+
+a {
+    text-decoration: none;
+    color: blue;
+}
+
+/* Sonstige Regeln */
+.leftL {
+    float: left;
+    color: blue;
+}
+
+.leftL.critical {
+    color: red;
+}
+
+.profile-container {
+    display: flex;
+    align-items: flex-start;
+}
+
+.question {
+    margin-left: 30px;
+}
+
+input[type="radio"] {
+    margin-left: 0;
+    margin-right: 5px;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+
+
+/* javascript.css */
+input.valid {
+    border-color: green;
+}
+
+/* Wenn die Eingabe ungültig ist, wird der Rand rot */
+input.invalid {
+    border-color: red;
+}
