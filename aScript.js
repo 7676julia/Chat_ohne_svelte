@@ -1,6 +1,13 @@
 // Dummy-Datensatz der existierenden Nutzer
 const existingUsers = ["Alice", "Bob", "Charlie"];
 
+const xmlhttp = new XMLHttpRequest(); xmlhttp.onreadystatechange = function () {
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) { let data = JSON.parse(xmlhttp.responseText); console.log(data);
+    } };
+    // Chat Server URL und Collection ID als Teil der URL
+    xmlhttp.open("GET", backendUrl + "/user", true);
+    // Das Token zur Authentifizierung, wenn notwendig xmlhttp.setRequestHeader('Authorization', 'Bearer ' + token); xmlhttp.send();
+
 // Funktion zur Überprüfung der Eingaben
 function validateInput(field, isValid) {
     if (field.value === "") {
