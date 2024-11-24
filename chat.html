@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="app.css">
+    <script src="chat.js"></script>
 </head>
 <body>
     <h1 class="left">Chat with</h1>
@@ -12,20 +13,16 @@
     <a href="profil.html" class="leftL"> Profile </a> |
     <a href="freundeliste.html" class="leftL critical"> Remove Friend</a>
     <hr>
-
-    <span class="chat">
-    <p>Tom: "Hallo, Welt"</p>
-    <p>Jerry: "Wie geht's"</p>
-    </span>
-    
-    <form action="chat.html">
-        <label for="eintragFeld"></label>
-        <input type='text' id='eintragFeld' placeholder="New Message">
-
-        <a href="login.html">
-            <input type="button" value="Send">
-        </a>
-    </form>
-
+    <div>
+        <div id="message-container">
+            <!-- Messages will be inserted here -->
+        </div>
+        <div class="chat">
+            <form>
+                <input type="text" placeholder="Type your message...">
+                <input type="button" value="Send" onclick="sendMessage(event)">
+            </form>
+        </div>
+    </div>
 </body>
 </html>
