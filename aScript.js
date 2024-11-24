@@ -65,6 +65,17 @@ document.addEventListener('DOMContentLoaded', function() {
             form.submit();
         }
     });
+// Formular-Validierung
+function validateForm(event) {
+    const isUsernameValid = validateUsername();
+    const isPasswordValid = validatePassword();
+    const isPasswordRepeatValid = validatePasswordRepeat();
+
+    if (!isUsernameValid || !isPasswordValid || !isPasswordRepeatValid) {
+        event.preventDefault(); // Verhindert das Absenden des Formulars
+    }
+}
+
 });
 
 console.log('script.js is loaded');
