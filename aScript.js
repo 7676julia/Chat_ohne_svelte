@@ -40,8 +40,8 @@ function validateUsername() {
     // Prüfen, ob der Benutzername in der Liste der bestehenden Benutzer vorhanden ist
     const isValid = username.value.length >= 3 && !existingUsers.includes(username.value);
     validateInput(username, isValid);
-        return isValid;
-    }
+    return isValid;
+}
 
 // Passwort-Validierung
 function validatePassword() {
@@ -61,7 +61,7 @@ function validatePasswordRepeat() {
 }
 
 // Event-Listener für die Eingabefelder
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById("registerForm");
     if (!form) {
         console.error("Formular nicht gefunden!");
@@ -73,24 +73,24 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById("confirm").addEventListener("input", validatePasswordRepeat);
 
     // Event-Listener für das Formular
-    form.addEventListener("submit", function(event) {
+    form.addEventListener("submit", function (event) {
         event.preventDefault(); // Verhindert das Absenden des Formulars
-        
+
         // Alle Validierungen durchführen
         const isUsernameValid = validateUsername();
         const isPasswordValid = validatePassword();
         const isPasswordRepeatValid = validatePasswordRepeat();
-        
+
         // Formular nur absenden wenn alles valid ist
         if (isUsernameValid && isPasswordValid && isPasswordRepeatValid) {
             form.submit();
         }
     });
-// Formular-Validierung
-form.addEventListener("submit", function(event) {
-    event.preventDefault(); // Prevent form submission
-    validateForm(event); // Run the centralized validation logic
-});
+    // Formular-Validierung
+    form.addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent form submission
+        validateForm(event); // Run the centralized validation logic
+    });
 
 
 });

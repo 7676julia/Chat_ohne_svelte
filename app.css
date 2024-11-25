@@ -124,6 +124,12 @@ label {
     width: 200px;
 }
 
+label[for="oneLine"], label[for="twoLines"] {
+    width: auto; /* Breite an den Inhalt anpassen */
+    display: inline-block; /* Sicherstellen, dass sie in einer Zeile bleiben */
+}
+
+
 input[type="text"], input[type="password"] {
     box-sizing: border-box;
     font-size: 1em;
