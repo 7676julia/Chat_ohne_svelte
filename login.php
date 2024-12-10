@@ -17,6 +17,16 @@
         echo "Das Formular wurde noch nicht abgeschickt.";
     }
 
+    $backendService = new BackendService();
+
+    if ($backendService->login($username, $password)) {
+        $_SESSION['user'] = $username; // Benutzername speichern
+        header("Location: friends.php"); // Weiterleitung zur Freundesliste
+        exit();
+    } else {
+        $error = "Invalid username or password."; // Fehlermeldung setzen
+    }
+
 ?>
 
 <!DOCTYPE html>
