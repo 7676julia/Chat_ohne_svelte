@@ -8,10 +8,11 @@ namespace Model;
 
 use JsonSerializable;
 
-class User implements JsonSerializable
+class Friend implements JsonSerializable
 {
     private $username;
-    private $foo;
+    private $status;
+    private $unread;
 
     public function __construct($username = "")
     {
@@ -23,14 +24,22 @@ class User implements JsonSerializable
         return $this->username;
     }
 
-    public function getFoo()
-    {
-        return $this->foo;
+    public function  getUnread() {
+        return $this->unread;
     }
 
-    public function setFoo($value)
+    public function  getStatus() {
+        return $this->status;
+    }
+
+    public function setStatusAccepted()
     {
-        $this->foo = $value;
+        $this->status = "accepted";
+    }
+
+    public function setStatusDismissed()
+    {
+        $this->status = "dismissed";
     }
 
     public function jsonSerialize(): mixed
@@ -39,13 +48,10 @@ class User implements JsonSerializable
     }
 
     public static function fromJson($data) {
-        $user = new User();
+        $friend = new Friend();
         foreach ($data as $key => $value) {
-            $user->{$key} = $value;
+            $friend->{$key} = $value;
         }
-        return $user;
+        return $friend;
     }
 }
-
-
-
