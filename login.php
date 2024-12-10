@@ -1,3 +1,24 @@
+<?php
+    require("start.php");
+
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Formulardaten abholen
+        $username = trim($_POST['username'] ?? '');
+        $password = trim($_POST['password'] ?? '');
+
+        if (!empty($username) && !empty($password)) {
+            // Logik zur Überprüfung der Daten
+            echo "Formulardaten verarbeitet. Username: $username";
+        } else {
+            echo "Bitte alle Felder ausfüllen!";
+        }
+    } else {
+        echo "Das Formular wurde noch nicht abgeschickt.";
+    }
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,7 +32,7 @@
 <body>
     <img src="images/chat.png" style="height: 100px">
     <h1>Please sign in</h1>
-    <form action="freundeliste.html" method="get">
+    <form action="freundeliste.html" method="post">
         <fieldset>
             <legend>Login</legend>
             <label for="username">Username</label>
@@ -25,6 +46,9 @@
         <input type="submit" value="Login">
         </div>
     </form>
+    <?php
+        var_dump($_POST); //zur Überpfüfung was versendet wurde
+    ?>
 </body>
 
 </html>
