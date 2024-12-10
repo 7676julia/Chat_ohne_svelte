@@ -11,8 +11,8 @@
 <body>
 
     <h1 class="left">Profile of Tom</h1>
-    <a href="freundeliste.html" class="leftL">Back to Chat|</a>
-    <a href="freundeliste.html" class="leftL critical">Remove Friend</a><br>
+    <a href="freundeliste.php" class="leftL">Back to Chat|</a>
+    <a href="freundeliste.php" class="leftL critical">Remove Friend</a><br>
     <hr>
     <div class="profile-container">
         <img src="images/user.png" id="profilPicture">

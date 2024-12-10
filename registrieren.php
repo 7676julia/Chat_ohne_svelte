@@ -12,7 +12,7 @@
 <body>
     <img src="images/user.png" style="height: 100px">
     <h1>Register yourself</h1>
-    <form action="freundeliste.html" method="get" id="registerForm">
+    <form action="freundeliste.php" method="get" id="registerForm">
         <fieldset>
             <div class="field">
                 <label for="username">Username</label>
@@ -31,7 +31,7 @@
             </div>
         </fieldset>
         <div class="button-container">
-            <a href="login.html">
+            <a href="login.php">
                 <input type="button" value="Cancel">
             </a>
 

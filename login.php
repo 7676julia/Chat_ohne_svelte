@@ -32,7 +32,7 @@
 <body>
     <img src="images/chat.png" style="height: 100px">
     <h1>Please sign in</h1>
-    <form action="freundeliste.html" method="post">
+    <form action="freundeliste.php" method="post">
         <fieldset>
             <legend>Login</legend>
             <label for="username">Username</label>
@@ -42,7 +42,7 @@
         </fieldset>
         <br>
         <div class="button-container">
-        <button type="button" onclick="window.location.href='registrieren.html'">Register</button>
+        <button type="button" onclick="window.location.href='registrieren.php'">Register</button>
         <input type="submit" value="Login">
         </div>
     </form>

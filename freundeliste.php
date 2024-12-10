@@ -9,7 +9,7 @@
 </head>
 <body>
     <h1>Friends</h1>
-    <a href="logout.html" Logout> &lt; Logout</a> | <a href="einstellungen.html">Settings</a>
+    <a href="logout.php" Logout> &lt; Logout</a> | <a href="einstellungen.php">Settings</a>
     <hr>
     <ul id = "friends-list">
         
@@ -24,7 +24,7 @@
     <button>Accept</button> <button>Reject</button>
     <hr>
 
-    <form action="freundeliste.html" method="get">
+    <form action="freundeliste.php" method="get">
         <label for="eintragFeld"></label>
         <input type="text" id="eintragFeld" name="eintrag" placeholder="Add friends to List" list="friend-selector">
         <datalist id="friend-selector">
