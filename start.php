@@ -11,7 +11,7 @@ spl_autoload_register(function($class) {
 
 session_start();
 
-define('CHAT_SERVER_URL', 'https://online-lectures-cs.thi.de/chat/'); define('CHAT_SERVER_ID', 'e9171e36-a7a6-4dbf-93c8-4341b71314b2'); # Ihre Collection ID
+/*define('CHAT_SERVER_URL', 'https://online-lectures-cs.thi.de/chat/'); define('CHAT_SERVER_ID', 'e9171e36-a7a6-4dbf-93c8-4341b71314b2'); # Ihre Collection ID*/
 
 $service = new Utils\BackendService("https://online-lectures-cs.thi.de/chat/", "302241ec-cc05-4668-a0ae-68ecbd6d1ba9");
 ?>
