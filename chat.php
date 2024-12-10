@@ -14,9 +14,9 @@ $json = json_encode($user); echo $json;
 </head>
 <body>
     <h1 class="left">Chat with</h1>
-    <a href="freundeliste.html" class="leftL"> < Back </a> |
-    <a href="profil.html" class="leftL"> Profile </a> |
-    <a href="freundeliste.html" class="leftL critical"> Remove Friend</a>
+    <a href="freundeliste.php" class="leftL"> < Back </a> |
+    <a href="profil.php" class="leftL"> Profile </a> |
+    <a href="freundeliste.php" class="leftL critical"> Remove Friend</a>
     <hr>
     <div>
         <div id="message-container">

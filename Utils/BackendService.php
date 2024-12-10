@@ -9,6 +9,12 @@ class BackendService{
     private $base = "";
     private $id = "";
     
+    public function test() { try {
+        return HttpClient::get($this->base . '/test.json'); } catch(\Exception $e) {
+                error_log($e);
+            }
+        return false; }
+
     /**
      * Erzeugt eine Instanz des BackendService.
      * @param $base Basisadresse des Backends

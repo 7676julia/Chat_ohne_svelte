@@ -10,7 +10,7 @@
 
 <body>
     <h1 class="left">Profile Settings</h1>
-    <form action="einstellungen.html" method="get"></form>>
+    <form action="einstellungen.php" method="get"></form>>
     <fieldset>
         <legend>Base Data</legend>
         <label for="FirstName">First Name</label>
@@ -41,7 +41,7 @@
         <input type='radio' id='twoLines' name='chatLayout' value='prefered'>
         <label for='twoLines'>Username and message in separate lines</label><br>
     </fieldset>
-    <button type="button" onclick="window.location.href='freundeliste.html'">Cancel</button>
+    <button type="button" onclick="window.location.href='freundeliste.php'">Cancel</button>
     <input type="submit" value="Save">
     </form>
 </body>
