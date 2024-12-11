@@ -1,31 +1,24 @@
 <?php
     require("start.php");
 
+    $error = ""; // Variable für Fehlermeldungen
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // Formulardaten abholen
-        $username = trim($_POST['username'] ?? '');
-        $password = trim($_POST['password'] ?? '');
+    if (!empty($_POST['username']) && !empty($_POST['password'])) {
+        // Beide Felder wurden ausgefüllt
+        $username = $_POST['username'];
+        $password = $_POST['password'];
 
-        if (!empty($username) && !empty($password)) {
-            // Logik zur Überprüfung der Daten
-            echo "Formulardaten verarbeitet. Username: $username";
-        } else {
-            echo "Bitte alle Felder ausfüllen!";
+        if (BackendService::login($username, $password)) {
+            $_SESSION['user'] = $username; // Nutzername in der Session speichern
+            header("Location: friends.php"); // Weiterleitung
+            exit(); // Beendet den weiteren Code
         }
-    } else {
-        echo "Das Formular wurde noch nicht abgeschickt.";
-    }
 
-    $backendService = new BackendService();
-
-    if ($backendService->login($username, $password)) {
-        $_SESSION['user'] = $username; // Benutzername speichern
-        header("Location: friends.php"); // Weiterleitung zur Freundesliste
-        exit();
-    } else {
-        $error = "Invalid username or password."; // Fehlermeldung setzen
-    }
+            // Logik zur Überprüfung der Daten
+            $error = "Formulardaten verarbeitet. Username: $username";
+        } else {
+            $error = "Bitte alle Felder ausfüllen!";
+        }
 
 ?>
 
@@ -42,6 +35,9 @@
 <body>
     <img src="images/chat.png" style="height: 100px">
     <h1>Please sign in</h1>
+    <?php if (!empty($error)): ?>
+        <p style="color: red;"><?php echo htmlspecialchars($error); ?></p>
+    <?php endif; ?>
     <form action="freundeliste.php" method="post">
         <fieldset>
             <legend>Login</legend>
