@@ -1,3 +1,12 @@
+<?php
+require("start.php");
+if (!isset($_SESSION['user'])&&empty($_SESSION['user'])){
+    header("Location: login.php");
+    exit();
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,7 +38,8 @@
         <input type="text" id="eintragFeld" name="eintrag" placeholder="Add friends to List" list="friend-selector">
         <datalist id="friend-selector">
         </datalist>
-        <button type="button">Add</button>
+   
+        <!-- <button type="button">Add</button> -->
         <input type="submit" value="Add">
     </form>
   

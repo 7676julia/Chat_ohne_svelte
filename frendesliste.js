@@ -1,34 +1,82 @@
-function suggestions(users) {
-    const suggestionsBox = document.getElementById("friend-selector");
-    // eventlistener für Änderungen im Eingabefeld-->
-    users.forEach((friend) => {
-        const li = document.createElement("option");
-        li.textContent = friend;
-        suggestionsBox.appendChild(li);
-    });
+//Blatt 4 php
+// Funktion zum Laden der Freundesliste
+function loadFriends() {
+    fetch('ajax_load_friends.php')
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Error loading friends');
+            }
+        })
+        .then(friends => {
+            handleFriends(friends);
+        })
+        .catch(error => console.error('Error:', error));
 }
 
 function loadUsers() {
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function () {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            let data = JSON.parse(xmlhttp.responseText);
+    fetch('ajax_load_users.php')
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Error loading users');
+            }
+        })
+        .then(data => {
             console.log(data);
             suggestions(data);
-        }
-    };
-    xmlhttp.open(
-        "GET",
-        "https://online-lectures-cs.thi.de/chat/605eaf1e-ca25-45bf-8dec-c666f82126a0/user",
-        true,
-    );
-    // Add token, e. g., from Tom
-    xmlhttp.setRequestHeader(
-        "Authorization",
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiVG9tIiwiaWF0IjoxNzMxOTI2MzE2fQ.FrdMQhzd_4FyW31CKOQDP3YXY7Tvx1y0plDrwCnfsJM",
-    );
-    xmlhttp.send();
+        })
+        .catch(error => console.error('Error:', error));
 }
+
+function addFriend() {
+    const friendInput = document.getElementById("friend-request-name");
+    const friendName = friendInput.value.trim();
+
+    fetch('ajax_add_friend.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username: friendName })
+    })
+    .then(response => {
+        if (response.ok) {
+            friendInput.value = '';
+            loadFriends(); // Refresh friends list
+        } else {
+            // Handle error (e.g., red border)
+            friendInput.style.borderColor = "red";
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        friendInput.style.borderColor = "red";
+    });
+}
+
+function suggestions(users) {
+    const suggestionsBox = document.getElementById("friend-selector");
+    // Clear existing options
+    suggestionsBox.innerHTML = '';
+    
+    // Get current user (you might need to adjust how this is determined)
+    const currentUser = "Tom"; // Replace with actual method of getting current user
+
+    users.forEach((friend) => {
+        // Skip current user
+        if (friend !== currentUser) {
+            const option = document.createElement("option");
+            option.value = friend;
+            option.textContent = friend;
+            suggestionsBox.appendChild(option);
+        }
+    });
+}
+
+
 
 function handleFriends(friends) {
     const friendsList = document.getElementById("friends-list");
@@ -38,7 +86,7 @@ function handleFriends(friends) {
     friendRequests.innerHTML = "";
 
     for (var friend of friends) {
-        if (friend.status === "accepted");
+        if (friend.status === "accepted")
         {
             let listItem = document.createElement("li");
             let link = document.createElement("a");
@@ -62,29 +110,6 @@ function handleFriends(friends) {
     }
 }
 
-function loadFriends() {
-    let xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function () {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            let friends = JSON.parse(xmlhttp.responseText);
-            console.log(friends);
-
-            handleFriends(friends);
-        }
-    };
-    xmlhttp.open(
-        "GET",
-        "https://online-lectures-cs.thi.de/chat/605eaf1e-ca25-45bf-8dec-c666f82126a0/friend",
-        true,
-    );
-    xmlhttp.setRequestHeader("Content-type", "application/json");
-    xmlhttp.setRequestHeader(
-        "Authorization",
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiVG9tIiwiaWF0IjoxNzMxOTI2MzE2fQ.FrdMQhzd_4FyW31CKOQDP3YXY7Tvx1y0plDrwCnfsJM",
-    );
-    xmlhttp.send();
-}
-
 document.addEventListener("DOMContentLoaded", function () {
     loadUsers();
     window.setInterval(function () {
@@ -92,3 +117,5 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 1000);
     loadFriends();
 });
+
+
