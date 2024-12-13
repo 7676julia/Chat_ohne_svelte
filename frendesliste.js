@@ -1,82 +1,35 @@
-//Blatt 4 php
-// Funktion zum Laden der Freundesliste
-function loadFriends() {
-    fetch('ajax_load_friends.php')
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                throw new Error('Error loading friends');
-            }
-        })
-        .then(friends => {
-            handleFriends(friends);
-        })
-        .catch(error => console.error('Error:', error));
-}
-
-function loadUsers() {
-    fetch('ajax_load_users.php')
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                throw new Error('Error loading users');
-            }
-        })
-        .then(data => {
-            console.log(data);
-            suggestions(data);
-        })
-        .catch(error => console.error('Error:', error));
-}
-
-function addFriend() {
-    const friendInput = document.getElementById("friend-request-name");
-    const friendName = friendInput.value.trim();
-
-    fetch('ajax_add_friend.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username: friendName })
-    })
-    .then(response => {
-        if (response.ok) {
-            friendInput.value = '';
-            loadFriends(); // Refresh friends list
-        } else {
-            // Handle error (e.g., red border)
-            friendInput.style.borderColor = "red";
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        friendInput.style.borderColor = "red";
-    });
-}
 
 function suggestions(users) {
     const suggestionsBox = document.getElementById("friend-selector");
-    // Clear existing options
-    suggestionsBox.innerHTML = '';
-    
-    // Get current user (you might need to adjust how this is determined)
-    const currentUser = "Tom"; // Replace with actual method of getting current user
-
+    // eventlistener für Änderungen im Eingabefeld-->
     users.forEach((friend) => {
-        // Skip current user
-        if (friend !== currentUser) {
-            const option = document.createElement("option");
-            option.value = friend;
-            option.textContent = friend;
-            suggestionsBox.appendChild(option);
-        }
+        const li = document.createElement("option");
+        li.textContent = friend;
+        suggestionsBox.appendChild(li);
     });
 }
 
-
+function loadUsers() {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            let data = JSON.parse(xmlhttp.responseText);
+            console.log(data);
+            suggestions(data);
+        }
+    };
+    xmlhttp.open(
+        "GET",
+        "https://online-lectures-cs.thi.de/chat/605eaf1e-ca25-45bf-8dec-c666f82126a0/user",
+        true,
+    );
+    // Add token, e. g., from Tom
+    xmlhttp.setRequestHeader(
+        "Authorization",
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiVG9tIiwiaWF0IjoxNzMxOTI2MzE2fQ.FrdMQhzd_4FyW31CKOQDP3YXY7Tvx1y0plDrwCnfsJM",
+    );
+    xmlhttp.send();
+}
 
 function handleFriends(friends) {
     const friendsList = document.getElementById("friends-list");
@@ -86,8 +39,7 @@ function handleFriends(friends) {
     friendRequests.innerHTML = "";
 
     for (var friend of friends) {
-        if (friend.status === "accepted")
-        {
+        if (friend.status === "accepted") {
             let listItem = document.createElement("li");
             let link = document.createElement("a");
 
@@ -104,11 +56,72 @@ function handleFriends(friends) {
         if (friend.status === "requested") {
             let listItem = document.createElement("li");
             listItem.textContent = friend.username;
+            //mehr verzweiflung
 
+            // Create form for Accept button
+            let acceptForm = document.createElement("form");
+            acceptForm.method = "POST"; // Set method to POST
+            acceptForm.action = "freundeliste.php"; // Change this to your PHP file path
+
+            // Create hidden input for the friend's username -> damit man weiß welche freundeanfrage angenommen wird
+            let usernameInput = document.createElement("input");
+            usernameInput.type = "hidden";
+            usernameInput.name = "username"; // Set the name for PHP access
+            usernameInput.value = friend.username; // Set the value to the friend's username
+
+            // Create Accept button
+            let acceptButton = document.createElement("button");
+            acceptButton.textContent = "Accept";
+            acceptButton.type = "submit"; // Change to submit to send the form
+            acceptButton.name = "aktion"; // Set name for PHP access
+            acceptButton.value = "akzeptieren"; // Set value for the action
+
+
+
+
+            // Create Reject button
+            let rejectButton = document.createElement("button");
+            rejectButton.textContent = "Reject";
+            rejectButton.onclick = function () {
+                // Assuming similar implementation for friendDismiss
+                if ($service.friendDismiss(friend.username)) {
+                    loadFriends(); // Reload friends if successful
+                } else {
+                    console.error("Failed to dismiss friend request");
+                    // Optionally, show an error message to the user
+                }
+            };
+
+            // Append buttons to list item
+            listItem.appendChild(acceptButton);
+            listItem.appendChild(rejectButton);
             friendRequests.appendChild(listItem);
         }
     }
 }
+
+
+//load friends with ajax
+function loadFriends() {
+    let xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4) {
+            if (xmlhttp.status == 200) {
+                let friends = JSON.parse(xmlhttp.responseText);
+                console.log(friends);
+
+                handleFriends(friends);
+            } else if (xmlhttp.status == 401) {
+                console.error("Not authorized");
+            } else {
+                console.error("Failed to load friends");
+            }
+        }
+    };
+    xmlhttp.open("GET", "ajax_load_friends.php", true);
+    xmlhttp.send();
+}
+
 
 document.addEventListener("DOMContentLoaded", function () {
     loadUsers();
@@ -117,5 +130,3 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 1000);
     loadFriends();
 });
-
-
