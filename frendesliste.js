@@ -1,13 +1,15 @@
-
-function suggestions(users) {
+/*function suggestions(users) {
     const suggestionsBox = document.getElementById("friend-selector");
-    // eventlistener für Änderungen im Eingabefeld-->
-    users.forEach((friend) => {
-        const li = document.createElement("option");
-        li.textContent = friend;
-        suggestionsBox.appendChild(li);
+    suggestionsBox.innerHTML = ""; // Alte Vorschläge löschen
+
+    users.forEach((user) => {
+        const option = document.createElement("option");
+        option.value = user; // Wert für die Auswahl
+        suggestionsBox.appendChild(option);
     });
 }
+    */
+
 
 function loadUsers() {
     var xmlhttp = new XMLHttpRequest();
@@ -15,7 +17,7 @@ function loadUsers() {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             let data = JSON.parse(xmlhttp.responseText);
             console.log(data);
-            suggestions(data);
+            //suggestions(data);
         }
     };
     xmlhttp.open(
@@ -39,13 +41,14 @@ function handleFriends(friends) {
     friendRequests.innerHTML = "";
 
     for (var friend of friends) {
-        if (friend.status === "accepted") {
+        if (friend.status === "accepted")
+        {
             let listItem = document.createElement("li");
             let link = document.createElement("a");
 
             link.setAttribute(
                 "href",
-                "chat.html?friend=" + encodeURIComponent(friend.username),
+                "chat.php?friend=" + encodeURIComponent(friend.username),
             );
             link.textContent = friend.username;
 
@@ -76,25 +79,36 @@ function handleFriends(friends) {
             acceptButton.name = "aktion"; // Set name for PHP access
             acceptButton.value = "akzeptieren"; // Set value for the action
 
+            // Append hidden input and button to form
+            acceptForm.appendChild(usernameInput);
+            acceptForm.appendChild(acceptButton);
+            // Append the form to the list item
+            listItem.appendChild(acceptForm);
 
+            // Create form for Reject button
+            let rejectForm = document.createElement("form");
+            rejectForm.method = "POST"; // Set method to POST
+            rejectForm.action = "freundeliste.php"; // Change this to your PHP file path
 
+            // Create hidden input for the friend's username -> so the friend request to reject is identified
+            let rejectUsernameInput = document.createElement("input");
+            rejectUsernameInput.type = "hidden";
+            rejectUsernameInput.name = "username"; // Set the name for PHP access
+            rejectUsernameInput.value = friend.username; // Set the value to the friend's username
 
             // Create Reject button
             let rejectButton = document.createElement("button");
             rejectButton.textContent = "Reject";
-            rejectButton.onclick = function () {
-                // Assuming similar implementation for friendDismiss
-                if ($service.friendDismiss(friend.username)) {
-                    loadFriends(); // Reload friends if successful
-                } else {
-                    console.error("Failed to dismiss friend request");
-                    // Optionally, show an error message to the user
-                }
-            };
+            rejectButton.type = "submit"; // Change to submit to send the form
+            rejectButton.name = "aktion"; // Set name for PHP access
+            rejectButton.value = "ablehnen"; // Set value for the action
 
-            // Append buttons to list item
-            listItem.appendChild(acceptButton);
-            listItem.appendChild(rejectButton);
+            // Append hidden input and button to form
+            rejectForm.appendChild(rejectUsernameInput);
+            rejectForm.appendChild(rejectButton);
+            // Append the form to the list item
+            listItem.appendChild(rejectForm);
+            
             friendRequests.appendChild(listItem);
         }
     }
