@@ -108,7 +108,7 @@ function sendMessage(event) {
     };
 
     // Update the endpoint to use ajax_send_message.php
-    xmlhttp.open("POST", "ajax_send_message.php`", true);
+    xmlhttp.open("POST", "ajax_send_message.php", true);
     xmlhttp.setRequestHeader('Authorization', 'Bearer ' + token);
     xmlhttp.setRequestHeader('Content-Type', 'application/json');
     xmlhttp.send(JSON.stringify(data));
