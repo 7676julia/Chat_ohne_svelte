@@ -1,24 +1,32 @@
 <?php
     require("start.php");
+    require_once __DIR__ . '/Utils/BackendService.php';
+
+    use Utils\BackendService;
 
     $error = ""; // Variable für Fehlermeldungen
 
-    if (!empty($_POST['username']) && !empty($_POST['password'])) {
-        // Beide Felder wurden ausgefüllt
-        $username = $_POST['username'];
-        $password = $_POST['password'];
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (!empty($_POST['username']) && !empty($_POST['password'])) {
+            // Beide Felder wurden ausgefüllt
+            $username = htmlspecialchars(trim($_POST['username']));
+            $password = htmlspecialchars(trim($_POST['password']));
 
-        if (BackendService::login($username, $password)) {
-            $_SESSION['user'] = $username; // Nutzername in der Session speichern
-            header("Location: friends.php"); // Weiterleitung
-            exit(); // Beendet den weiteren Code
-        }
-
-            // Logik zur Überprüfung der Daten
-            $error = "Formulardaten verarbeitet. Username: $username";
+            $baseUrl = "http://localhost/api"; // Basis-URL deines Backends
+            $collectionId = "1234"; // Beispiel-ID für deine Collection
+            $backendService = new BackendService($baseUrl, $collectionId);
+    
+            if ($backendService->login($username, $password)) {
+                $_SESSION['user'] = $username; // Nutzername in der Session speichern
+                header("Location: friends.php"); // Weiterleitung
+                exit(); // Beendet den weiteren Code
+            } else {
+                $error = "Ungültige Zugangsdaten!";
+            }
         } else {
             $error = "Bitte alle Felder ausfüllen!";
         }
+    }
 
 ?>
 
@@ -38,7 +46,7 @@
     <?php if (!empty($error)): ?>
         <p style="color: red;"><?php echo htmlspecialchars($error); ?></p>
     <?php endif; ?>
-    <form action="freundeliste.php" method="post">
+    <form action="" method="post"> <!--Warum musste ich hier freundeliste.php raus nehmen?-->
         <fieldset>
             <legend>Login</legend>
             <label for="username">Username</label>

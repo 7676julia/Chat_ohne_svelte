@@ -38,7 +38,7 @@ function handleFriends(friends) {
     friendRequests.innerHTML = "";
 
     for (var friend of friends) {
-        if (friend.status === "accepted");
+        if (friend.status === "accepted")
         {
             let listItem = document.createElement("li");
             let link = document.createElement("a");
