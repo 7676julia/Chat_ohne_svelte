@@ -1,3 +1,73 @@
+<?php
+require("start.php");
+if (!isset($_SESSION['user']) || empty($_SESSION['user'])){
+    header("Location: login.php");
+    exit();
+}
+//verzweiflung ist verzweifelt
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    // Debug: Check all POST data
+    error_log(print_r($_POST, true)); // Logs data for debugging
+
+    if (isset($_POST['aktion'], $_POST['username'])) {
+        $aktion = $_POST['aktion'];
+        $username = $_POST['username'];
+        if ($aktion === "akzeptieren") {
+            $success = $service->friendAccept($username);    
+        } elseif ($aktion === "ablehnen") {
+            $dismiss = $service->friendDismiss($username);
+        }
+    } else {
+        echo "Missing action or username!";
+    }
+} else {
+    echo "No action received!";
+}
+
+//send friend request 
+// Handle friend request submission
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['friendRequestName'])) {
+    $friendRequestName = $_POST['friendRequestName'];
+    $success = $service->friendRequest($friendRequestName);
+    if ($success) {
+        // Redirect to prevent form resubmission
+        header("Location: freundeliste.php");
+        exit();
+    } else {
+        // Handle error (could show an error message)
+        $errorMessage = "Could not send friend request to " . htmlspecialchars($friendRequestName);
+    }
+}
+
+//potential friends
+// Assuming session is started and current user is already set
+$currentUser = $_SESSION['user']; // Aktueller Benutzer
+
+// Load all users and the current user's friends
+$allUsers = $service->loadUsers(); // Methode, um alle Nutzer zu laden
+$friends = $service->loadFriends($currentUser); // Methode, um aktuelle Freunde zu laden
+
+// Get the usernames of current user's friends
+$friendUsernames = array_map(function($friend) {
+    return $friend->getUsername(); // Convert Friend objects to their usernames
+}, $friends);
+
+// Initialize an array to hold potential friends
+$potentialFriends = [];
+
+// Iterate through all users to find potential friends
+foreach ($allUsers as $user) {
+    // Check if the user is not the current user and not already a friend
+    if ($user !== $currentUser && !in_array($user, $friendUsernames)) {
+        $potentialFriends[] = $user; // Add to potential friends
+    }
+}
+
+
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +78,7 @@
     <script src="frendesliste.js"></script>
 </head>
 <body>
+<body data-current-user="<?php echo htmlspecialchars($_SESSION['user']); ?>">
     <h1>Friends</h1>
     <a href="logout.php" Logout> &lt; Logout</a> | <a href="einstellungen.php">Settings</a>
     <hr>
@@ -21,17 +92,35 @@
         
 
     </ul>
-    <button>Accept</button> <button>Reject</button>
+    
     <hr>
 
-    <form action="freundeliste.php" method="get">
-        <label for="eintragFeld"></label>
-        <input type="text" id="eintragFeld" name="eintrag" placeholder="Add friends to List" list="friend-selector">
-        <datalist id="friend-selector">
-        </datalist>
-        <button type="button">Add</button>
-        <input type="submit" value="Add">
-    </form>
+    <form action="freundeliste.php" method="post">
+    <label for="friend-request-name">Add Friend</label>
+    <input 
+        type="text" 
+        placeholder="Add Friend to List" 
+        name="friendRequestName" 
+        id="friend-request-name" 
+        list="friend-selector" 
+        required
+    >
+    <datalist id="friend-selector">
+        <?php 
+        foreach ($potentialFriends as $potentialFriend) {
+            echo "<option value='" . htmlspecialchars($potentialFriend) . "'>";
+        }
+        ?>
+    </datalist>
+    <button type="submit">Add Friend</button>
+</form>
+    
+    <?php 
+    // Display error message if exists
+    if (isset($errorMessage)) {
+        echo "<p style='color: red;'>" . $errorMessage . "</p>";
+    }
+    ?>
   
 </body>
 </html>

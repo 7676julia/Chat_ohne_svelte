@@ -43,22 +43,22 @@ function loadMessages() {
         }
     };
 
-    xmlhttp.open("GET", `${backendUrl}/message/${friend}`, true);
+    // Update the endpoint to use ajax_load_messages.php with the friend parameter
+    xmlhttp.open("GET", `ajax_load_messages.php?to=${encodeURIComponent(friend)}`, true);
     xmlhttp.setRequestHeader('Authorization', 'Bearer ' + token);
     xmlhttp.send();
 }
 
+
 // Display messages in the chat
 function displayMessages(messages) {
-    // Find the message container
     const messageContainer = document.getElementById("message-container");
     if (!messageContainer) return;
-    
-    // Clear existing messages
+
     messageContainer.innerHTML = "";
-    
-    // Add all messages
+
     messages.forEach(message => {
+        console.log("Displaying message:", message); // Debugging-Ausgabe
         const messageElement = document.createElement("div");
         messageElement.className = "chat";
         messageElement.textContent = `${message.from}: "${message.msg}"`;
@@ -84,9 +84,9 @@ function sendMessage(event) {
         return;
     }
 
-    // Correct format according to documentation
+    // Message format as specified
     const data = {
-        message: inputField.value.trim(),
+        msg: inputField.value.trim(),
         to: friend
     };
 
@@ -107,8 +107,8 @@ function sendMessage(event) {
         }
     };
 
-    // Correct endpoint - just /message without the recipient
-    xmlhttp.open("POST", `${backendUrl}/message`, true);
+    // Update the endpoint to use ajax_send_message.php
+    xmlhttp.open("POST", "ajax_send_message.php", true);
     xmlhttp.setRequestHeader('Authorization', 'Bearer ' + token);
     xmlhttp.setRequestHeader('Content-Type', 'application/json');
     xmlhttp.send(JSON.stringify(data));
@@ -128,3 +128,34 @@ function initializeChat() {
 
 // Start everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', initializeChat);
+
+//freunde entfernen
+// Funktion zum Entfernen eines Freundes
+function removeFriend(friend) {
+    const xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4) {
+            if (xmlhttp.status == 204) {
+                console.log(`Freund ${friend} erfolgreich entfernt.`);
+                // Hier können Sie die Ansicht aktualisieren, um den entfernten Freund zu entfernen
+                loadMessages(); // oder eine andere Funktion, um die Freundesliste zu aktualisieren
+            } else {
+                console.error("Fehler beim Entfernen des Freundes:", xmlhttp.status);
+            }
+        }
+    };
+
+    // Anpassen der URL, um die Aktion "remove-friend" aufzurufen
+    const url = `${backendUrl}/remove-friend?to=${friend}&action=remove-friend`;
+    xmlhttp.open("DELETE", url, true); // DELETE-Request für die Entfernung
+    xmlhttp.setRequestHeader('Authorization', 'Bearer ' + token);
+    xmlhttp.send();
+}
+document.querySelectorAll('.remove-friend').forEach(link => {
+    link.addEventListener('click', function(event) {
+        event.preventDefault(); // Verhindert die Standardaktion des Links
+        
+        const friendUsername = this.getAttribute('data-username'); // Benutzernamen des Freundes abrufen
+        removeFriend(friendUsername); // Freund entfernen
+    });
+});

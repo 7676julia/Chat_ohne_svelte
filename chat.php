@@ -1,3 +1,18 @@
+<?php
+require("start.php");
+if (!isset($_SESSION['user']) || empty($_SESSION['user'])){
+    header("Location: login.php");
+    exit();
+}
+if (!isset($_GET['friend']) || empty($_GET['friend'])){
+    header("Location: freundeliste.php");
+    exit();
+}
+
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,7 +31,11 @@ $json = json_encode($user); echo $json;
     <h1 class="left">Chat with</h1>
     <a href="freundeliste.php" class="leftL"> < Back </a> |
     <a href="profil.php" class="leftL"> Profile </a> |
-    <a href="freundeliste.php" class="leftL critical"> Remove Friend</a>
+    <!-- freunde entfernen -->
+    <div class="friend-item">
+    <span class="friend-username"></span>
+    <a href="#" class="remove-friend" data-username="FreundUsername">Freund entfernen</a>
+    </div>
     <hr>
     <div>
         <div id="message-container">
