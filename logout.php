@@ -1,3 +1,10 @@
+<?php
+require("start.php");
+session_unset();
+header("Location: index.php"); // Weiterleitung zur Startseite
+exit(); // Wichtiger Exit-Befehl nach Header
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
