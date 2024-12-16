@@ -1,38 +1,12 @@
-/*function suggestions(users) {
-    const suggestionsBox = document.getElementById("friend-selector");
-    suggestionsBox.innerHTML = ""; // Alte Vorschläge löschen
+document.addEventListener("DOMContentLoaded", () => {
+    loadUsers(); // Benutzer laden
+    loadFriends(); // Freunde laden
 
-    users.forEach((user) => {
-        const option = document.createElement("option");
-        option.value = user; // Wert für die Auswahl
-        suggestionsBox.appendChild(option);
-    });
-}
-    */
+    // Lade Freunde alle 1 Sekunde
+    window.setInterval(loadFriends, 1000);
+});
 
-
-function loadUsers() {
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function () {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            let data = JSON.parse(xmlhttp.responseText);
-            console.log(data);
-            //suggestions(data);
-        }
-    };
-    xmlhttp.open(
-        "GET",
-        "https://online-lectures-cs.thi.de/chat/605eaf1e-ca25-45bf-8dec-c666f82126a0/user",
-        true,
-    );
-    // Add token, e. g., from Tom
-    xmlhttp.setRequestHeader(
-        "Authorization",
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiVG9tIiwiaWF0IjoxNzMxOTI2MzE2fQ.FrdMQhzd_4FyW31CKOQDP3YXY7Tvx1y0plDrwCnfsJM",
-    );
-    xmlhttp.send();
-}
-
+// Funktion zur Verarbeitung der Freunde
 function handleFriends(friends) {
     const friendsList = document.getElementById("friends-list");
     const friendRequests = document.getElementById("friend-requests");
@@ -41,7 +15,7 @@ function handleFriends(friends) {
     friendRequests.innerHTML = "";
 
     for (var friend of friends) {
-        if (friend.status === "accepted")
+        if (friend.status === "accepted");
         {
             let listItem = document.createElement("li");
             let link = document.createElement("a");
@@ -59,63 +33,13 @@ function handleFriends(friends) {
         if (friend.status === "requested") {
             let listItem = document.createElement("li");
             listItem.textContent = friend.username;
-            //mehr verzweiflung
 
-            // Create form for Accept button
-            let acceptForm = document.createElement("form");
-            acceptForm.method = "POST"; // Set method to POST
-            acceptForm.action = "freundeliste.php"; // Change this to your PHP file path
-
-            // Create hidden input for the friend's username -> damit man weiß welche freundeanfrage angenommen wird
-            let usernameInput = document.createElement("input");
-            usernameInput.type = "hidden";
-            usernameInput.name = "username"; // Set the name for PHP access
-            usernameInput.value = friend.username; // Set the value to the friend's username
-
-            // Create Accept button
-            let acceptButton = document.createElement("button");
-            acceptButton.textContent = "Accept";
-            acceptButton.type = "submit"; // Change to submit to send the form
-            acceptButton.name = "aktion"; // Set name for PHP access
-            acceptButton.value = "akzeptieren"; // Set value for the action
-
-            // Append hidden input and button to form
-            acceptForm.appendChild(usernameInput);
-            acceptForm.appendChild(acceptButton);
-            // Append the form to the list item
-            listItem.appendChild(acceptForm);
-
-            // Create form for Reject button
-            let rejectForm = document.createElement("form");
-            rejectForm.method = "POST"; // Set method to POST
-            rejectForm.action = "freundeliste.php"; // Change this to your PHP file path
-
-            // Create hidden input for the friend's username -> so the friend request to reject is identified
-            let rejectUsernameInput = document.createElement("input");
-            rejectUsernameInput.type = "hidden";
-            rejectUsernameInput.name = "username"; // Set the name for PHP access
-            rejectUsernameInput.value = friend.username; // Set the value to the friend's username
-
-            // Create Reject button
-            let rejectButton = document.createElement("button");
-            rejectButton.textContent = "Reject";
-            rejectButton.type = "submit"; // Change to submit to send the form
-            rejectButton.name = "aktion"; // Set name for PHP access
-            rejectButton.value = "ablehnen"; // Set value for the action
-
-            // Append hidden input and button to form
-            rejectForm.appendChild(rejectUsernameInput);
-            rejectForm.appendChild(rejectButton);
-            // Append the form to the list item
-            listItem.appendChild(rejectForm);
-            
             friendRequests.appendChild(listItem);
         }
     }
 }
 
-
-//load friends with ajax
+// Lade Freunde mit Ajax
 function loadFriends() {
     let xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
@@ -123,8 +47,7 @@ function loadFriends() {
             if (xmlhttp.status == 200) {
                 let friends = JSON.parse(xmlhttp.responseText);
                 console.log(friends);
-
-                handleFriends(friends);
+                handleFriends(friends); // Stelle sicher, dass diese Funktion definiert ist
             } else if (xmlhttp.status == 401) {
                 console.error("Not authorized");
             } else {
@@ -136,11 +59,130 @@ function loadFriends() {
     xmlhttp.send();
 }
 
+//nutzer laden
+function loadUsers() {
+    fetch("ajax_load_users.php", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json(); // JSON-Daten parsen
+    })
+    .then(data => {
+        console.log("Users loaded successfully:", data);
 
-document.addEventListener("DOMContentLoaded", function () {
-    loadUsers();
-    window.setInterval(function () {
-        loadFriends();
-    }, 1000);
-    loadFriends();
+        // Hier kannst du die Benutzerliste in die HTML-Seite integrieren
+        const userListContainer = document.getElementById("user-list");
+        userListContainer.innerHTML = ""; // Vorherigen Inhalt löschen
+
+        data.forEach(user => {
+            const userItem = document.createElement("div");
+            userItem.className = "user-item";
+            userItem.textContent = user.name; // Angenommen, `name` ist ein Feld im JSON-Objekt
+            userListContainer.appendChild(userItem);
+        });
+    })
+    .catch(error => {
+        console.error("Error loading users:", error.message);
+    });
+}
+
+
+// Funktion zum Ausführen von Freundschaftsaktionen
+async function friendAction(action, friend) {
+    try {
+        const response = await fetch('ajax_friend_action.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ action, friend })
+        });
+
+        if (response.ok) {
+            alert(`Action "${action}" for friend "${friend}" was successful!`);
+            loadFriends(); // Aktualisiert die UI dynamisch
+        } else {
+            const error = await response.json();
+            alert(`Error: ${error.message}`);
+        }
+    } catch (err) {
+        console.error("Request failed", err);
+    }
+}
+
+// Funktion zum Erstellen von Buttons für Freundesaktionen
+function createFriendActionButtons(friend, listItem) {
+    const actions = {
+        requested: [
+            { text: "Accept", action: "accept" },
+            { text: "Reject", action: "dismiss" }
+        ],
+        accepted: [
+            { text: "Remove", action: "remove" }
+        ]
+    };
+
+    const buttons = actions[friend.status] || [];
+    buttons.forEach(({ text, action }) => {
+        const button = document.createElement("button");
+        button.textContent = text;
+        button.onclick = () => friendAction(action, friend.username);
+        listItem.appendChild(button);
+    });
+}
+
+//friend request mit ajax
+const sendFriendRequest = (friendUsername) => {
+    fetch('path/to/your/ajax/file.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            action: 'add',
+            friend: friendUsername
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Handle successful friend request (e.g., update UI)
+        console.log('Friend request sent successfully');
+    })
+    .catch(error => {
+        console.error('Error sending friend request:', error);
+    });
+};
+
+//add friend button event listener
+document.getElementById("send-request-button").addEventListener("click", function () {
+    const friendNameInput = document.getElementById("friend-request-name");
+    const friendName = friendNameInput.value.trim(); // Get the friend's name
+
+    if (!friendName) return; // Exit if no name is provided
+
+    // Send AJAX request to add the friend
+    fetch("freundeliste.php", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            action: "add",
+            friend: friendName,
+        }),
+    });
+
+    // Clear the input field after sending the request
+    friendNameInput.value = "";
 });

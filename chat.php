@@ -8,9 +8,6 @@ if (!isset($_GET['friend']) || empty($_GET['friend'])){
     header("Location: freundeliste.php");
     exit();
 }
-
-
-
 ?>
 
 <!DOCTYPE html>
@@ -33,9 +30,9 @@ $json = json_encode($user); echo $json;
     <a href="profil.php" class="leftL"> Profile </a> |
     <!-- freunde entfernen -->
     <div class="friend-item">
-    <span class="friend-username"></span>
-    <a href="#" class="remove-friend" data-username="FreundUsername">Freund entfernen</a>
-    </div>
+    <a href="#" class="remove-friend" data-username="<?php echo htmlspecialchars($_GET['friend']); ?>">Freund entfernen</a>
+</div>
+
     <hr>
     <div>
         <div id="message-container">

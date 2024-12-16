@@ -67,7 +67,6 @@ function displayMessages(messages) {
 }
 
 // Send a new message
-// Send a new message
 function sendMessage(event) {
     if (event) {
         event.preventDefault();
@@ -125,37 +124,45 @@ function initializeChat() {
     // Set up periodic message loading
     window.setInterval(loadMessages, 1000);
 }
-
 // Start everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', initializeChat);
 
-//freunde entfernen
 // Funktion zum Entfernen eines Freundes
 function removeFriend(friend) {
+    const data = {
+        action: 'remove', // Aktion definieren
+        friend: friend    // Benutzername des Freundes
+    };
+
     const xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState == 4) {
             if (xmlhttp.status == 204) {
                 console.log(`Freund ${friend} erfolgreich entfernt.`);
-                // Hier können Sie die Ansicht aktualisieren, um den entfernten Freund zu entfernen
-                loadMessages(); // oder eine andere Funktion, um die Freundesliste zu aktualisieren
+                loadMessages(); // Aktualisiere die Nachrichtensicht oder Freundesliste
+                // Hier kannst du auch die Freundesliste im DOM aktualisieren, wenn nötig
             } else {
                 console.error("Fehler beim Entfernen des Freundes:", xmlhttp.status);
+                console.error("Response:", xmlhttp.responseText);
             }
         }
     };
 
-    // Anpassen der URL, um die Aktion "remove-friend" aufzurufen
-    const url = `${backendUrl}/remove-friend?to=${friend}&action=remove-friend`;
-    xmlhttp.open("DELETE", url, true); // DELETE-Request für die Entfernung
-    xmlhttp.setRequestHeader('Authorization', 'Bearer ' + token);
-    xmlhttp.send();
+    // Anfrage an die freundesliste.php senden
+    xmlhttp.open("POST", "ajax_friend_action.php", true);
+    xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xmlhttp.send(`action=${encodeURIComponent(data.action)}&friend=${encodeURIComponent(data.friend)}`);
 }
-document.querySelectorAll('.remove-friend').forEach(link => {
-    link.addEventListener('click', function(event) {
-        event.preventDefault(); // Verhindert die Standardaktion des Links
-        
-        const friendUsername = this.getAttribute('data-username'); // Benutzernamen des Freundes abrufen
-        removeFriend(friendUsername); // Freund entfernen
-    });
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Attach click event to remove friend link
+    const removeFriendLink = document.querySelector('.remove-friend');
+    if (removeFriendLink) {
+        removeFriendLink.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent default link behavior
+            const friendUsername = this.getAttribute('data-username'); // Get the username from the link
+            removeFriend(friendUsername); // Call the removeFriend function
+        });
+    }
 });
+

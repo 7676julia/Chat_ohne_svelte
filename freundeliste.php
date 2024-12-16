@@ -6,9 +6,6 @@ if (!isset($_SESSION['user']) || empty($_SESSION['user'])){
 }
 //verzweiflung ist verzweifelt
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // Debug: Check all POST data
-    error_log(print_r($_POST, true)); // Logs data for debugging
-
     if (isset($_POST['aktion'], $_POST['username'])) {
         $aktion = $_POST['aktion'];
         $username = $_POST['username'];
@@ -24,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     echo "No action received!";
 }
 
-//send friend request 
+/*send friend request 
 // Handle friend request submission
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['friendRequestName'])) {
     $friendRequestName = $_POST['friendRequestName'];
@@ -38,6 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['friendRequestName']))
         $errorMessage = "Could not send friend request to " . htmlspecialchars($friendRequestName);
     }
 }
+*/
 
 //potential friends
 // Assuming session is started and current user is already set
@@ -75,7 +73,7 @@ foreach ($allUsers as $user) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="app.css">
-    <script src="frendesliste.js"></script>
+   
 </head>
 <body>
 <body data-current-user="<?php echo htmlspecialchars($_SESSION['user']); ?>">
@@ -95,12 +93,11 @@ foreach ($allUsers as $user) {
     
     <hr>
 
-    <form action="freundeliste.php" method="post">
+    <div>
     <label for="friend-request-name">Add Friend</label>
     <input 
         type="text" 
         placeholder="Add Friend to List" 
-        name="friendRequestName" 
         id="friend-request-name" 
         list="friend-selector" 
         required
@@ -112,15 +109,8 @@ foreach ($allUsers as $user) {
         }
         ?>
     </datalist>
-    <button type="submit">Add Friend</button>
-</form>
-    
-    <?php 
-    // Display error message if exists
-    if (isset($errorMessage)) {
-        echo "<p style='color: red;'>" . $errorMessage . "</p>";
-    }
-    ?>
-  
+    <button id="send-request-button">Add Friend</button>
+</div>
+ <script src="frendesliste.js"></script>
 </body>
 </html>
