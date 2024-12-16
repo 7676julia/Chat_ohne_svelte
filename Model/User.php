@@ -1,40 +1,74 @@
 <?php
-// Wie in Java gibt es eine Möglichkeit
-// Code (insbesondere Klassen) zu strukturieren
-// -> hier namespaces
-// -> in Java z.B. java.utils.io.Irgendwas
-// -> in PHP: Model\User
 namespace Model;
-
 use JsonSerializable;
 
-class User implements JsonSerializable
-{
+class User implements JsonSerializable {
     private $username;
-    private $foo;
+    private $firstName;
+    private $lastName;
+    private $coffeeOrTea;
+    private $description;
+    private $chatLayout;
+    private $changeHistory = array();
 
-    public function __construct($username = "")
-    {
+    public function __construct($username = null) {
         $this->username = $username;
     }
 
-    public function getUsername()
-    {
+    // Getters and Setters
+    public function getUsername() {
         return $this->username;
     }
 
-    public function getFoo()
-    {
-        return $this->foo;
+    public function getFirstName() {
+        return $this->firstName;
     }
 
-    public function setFoo($value)
-    {
-        $this->foo = $value;
+    public function setFirstName($firstName) {
+        $this->firstName = $firstName;
     }
 
-    public function jsonSerialize(): mixed
-    {
+    public function getLastName() {
+        return $this->lastName;
+    }
+
+    public function setLastName($lastName) {
+        $this->lastName = $lastName;
+    }
+
+    public function getCoffeeOrTea() {
+        return $this->coffeeOrTea;
+    }
+
+    public function setCoffeeOrTea($preference) {
+        $this->coffeeOrTea = $preference;
+    }
+
+    public function getDescription() {
+        return $this->description;
+    }
+
+    public function setDescription($description) {
+        $this->description = $description;
+    }
+
+    public function getChatLayout() {
+        return $this->chatLayout;
+    }
+
+    public function setChatLayout($layout) {
+        $this->chatLayout = $layout;
+    }
+
+    public function getChangeHistory() {
+        return $this->changeHistory;
+    }
+
+    public function addToHistory() {
+        $this->changeHistory[] = date('Y-m-d H:i:s');
+    }
+
+    public function jsonSerialize(): mixed {
         return get_object_vars($this);
     }
 
@@ -46,6 +80,3 @@ class User implements JsonSerializable
         return $user;
     }
 }
-
-
-
