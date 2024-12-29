@@ -21,21 +21,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     echo "No action received!";
 }
 
-/*send friend request 
+
 // Handle friend request submission
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['friendRequestName'])) {
     $friendRequestName = $_POST['friendRequestName'];
-    $success = $service->friendRequest($friendRequestName);
+    $success = $service->friendRequest(new Model\Friend($friendRequestName)); 
     if ($success) {
-        // Redirect to prevent form resubmission
-        header("Location: freundeliste.php");
-        exit();
+        
     } else {
         // Handle error (could show an error message)
         $errorMessage = "Could not send friend request to " . htmlspecialchars($friendRequestName);
     }
 }
-*/
+
 
 //potential friends
 // Assuming session is started and current user is already set
@@ -94,12 +92,15 @@ foreach ($allUsers as $user) {
     <hr>
 
     <div>
+    <form>
     <label for="friend-request-name">Add Friend</label>
+    
     <input 
         type="text" 
         placeholder="Add Friend to List" 
         id="friend-request-name" 
         list="friend-selector" 
+        name = "friendRequestName"
         required
     >
     <datalist id="friend-selector">
@@ -110,6 +111,7 @@ foreach ($allUsers as $user) {
         ?>
     </datalist>
     <button id="send-request-button">Add Friend</button>
+    </form>
 </div>
  <script src="frendesliste.js"></script>
 </body>

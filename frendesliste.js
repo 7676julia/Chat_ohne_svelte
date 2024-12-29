@@ -164,7 +164,7 @@ const sendFriendRequest = (friendUsername) => {
     });
 };
 
-//add friend button event listener
+/*//add friend button event listener
 document.getElementById("send-request-button").addEventListener("click", function () {
     const friendNameInput = document.getElementById("friend-request-name");
     const friendName = friendNameInput.value.trim(); // Get the friend's name
@@ -186,3 +186,4 @@ document.getElementById("send-request-button").addEventListener("click", functio
     // Clear the input field after sending the request
     friendNameInput.value = "";
 });
+*/
