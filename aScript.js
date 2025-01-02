@@ -21,17 +21,37 @@ xmlhttp.setRequestHeader('Authorization', 'Bearer ' + window.token);
 xmlhttp.send();
 
 
-// Funktion zur Überprüfung der Eingaben
-function validateInput(field, isValid) {
+// Funktion zur Überprüfung der Eingaben mit Bootstrap-Validierung
+function validateInput(field, isValid, message) {
     if (field.value === "") {
-        field.classList.remove("invalid", "valid");
+        field.classList.remove("is-invalid", "is-valid");
+        removeValidationMessage(field);
     } else if (!isValid) {
-        field.classList.add("invalid");
-        field.classList.remove("valid");
+        field.classList.add("is-invalid");
+        field.classList.remove("is-valid");
+        showValidationMessage(field, message, false);
     } else {
-        field.classList.add("valid");
-        field.classList.remove("invalid");
+        field.classList.add("is-valid");
+        field.classList.remove("is-invalid");
+        showValidationMessage(field, "Looks good!", true);
     }
+}
+
+// Hilfsfunktion zum Anzeigen der Validierungsnachricht
+function showValidationMessage(field, message, isValid) {
+    let feedback = field.parentElement.querySelector('.valid-feedback, .invalid-feedback');
+    if (!feedback) {
+        feedback = document.createElement('div');
+        feedback.className = isValid ? 'valid-feedback' : 'invalid-feedback';
+        field.parentElement.appendChild(feedback);
+    }
+    feedback.textContent = message;
+}
+
+// Hilfsfunktion zum Entfernen der Validierungsnachricht
+function removeValidationMessage(field) {
+    const feedbacks = field.parentElement.querySelectorAll('.valid-feedback, .invalid-feedback');
+    feedbacks.forEach(feedback => feedback.remove());
 }
 
 // Benutzername-Validierung
@@ -39,7 +59,8 @@ function validateUsername() {
     const username = document.getElementById("username");
     // Prüfen, ob der Benutzername in der Liste der bestehenden Benutzer vorhanden ist
     const isValid = username.value.length >= 3 && !existingUsers.includes(username.value);
-    validateInput(username, isValid);
+    const message = "Der Benutzername ist bereits vergeben oder zu kurz.";
+    validateInput(username, isValid, message);
     return isValid;
 }
 
@@ -47,7 +68,8 @@ function validateUsername() {
 function validatePassword() {
     const password = document.getElementById("password");
     const isValid = password.value.length >= 8;
-    validateInput(password, isValid);
+    const message = "Das Passwort muss mindestens 8 Zeichen lang sein.";
+    validateInput(password, isValid, message);
     return isValid;
 }
 
@@ -56,7 +78,8 @@ function validatePasswordRepeat() {
     const password = document.getElementById("password");
     const passwordRepeat = document.getElementById("confirm");
     const isValid = passwordRepeat.value === password.value && password.value !== "";
-    validateInput(passwordRepeat, isValid);
+    const message = "Die Passwörter stimmen nicht überein.";
+    validateInput(passwordRepeat, isValid, message);
     return isValid;
 }
 
@@ -74,7 +97,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Event-Listener für das Formular
     form.addEventListener("submit", function (event) {
-        event.preventDefault(); // Verhindert das Absenden des Formulars
+        event.preventDefault();
+        
+        // Bootstrap Form-Validierung aktivieren
+        form.classList.add('was-validated');
 
         // Alle Validierungen durchführen
         const isUsernameValid = validateUsername();
@@ -86,12 +112,6 @@ document.addEventListener('DOMContentLoaded', function () {
             form.submit();
         }
     });
-    // Formular-Validierung
-    form.addEventListener("submit", function (event) {
-        event.preventDefault(); // Prevent form submission
-        validateForm(event); // Run the centralized validation logic
-    });
-
 
 });
 

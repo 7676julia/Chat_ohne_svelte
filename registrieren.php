@@ -17,7 +17,7 @@ $backendService = new BackendService($baseUrl, $collectionId);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
     $password = trim($_POST['password'] ?? '');
-    $confirmPassword = trim($_POST['confirmPassword'] ?? '');
+    $confirmPassword = trim($_POST['confirm'] ?? '');
 
     if (empty($username) || strlen($username) < 3) {
         $usernameError = "Der Nutzername muss mindestens 3 Zeichen lang sein.";
@@ -56,39 +56,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body>
-    <img src="images/user.png" style="height: 100px">
-    <h1>Register yourself</h1>
+    <div class="container mt-4 d-flex justify-content-center">
+    <div class="col-md-4"> <!-- Set the width of the form to about one-third of the screen -->
+            <img src="images/user.png" style="height: 100px" class="img-fluid rounded-circle mx-auto d-block"> <!-- Centered image -->
+            <h1 class="text-center">Register yourself</h1> <!-- Centered heading -->
 
-    <?php if ($error): ?>
-        <p style="color: red;"><?php echo htmlspecialchars($error); ?></p>
-    <?php endif; ?>
-
-    <div class="container">
-    <form action="registrieren.php" method="post" id="registerForm" novalidate>
-        <fieldset>
-            <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" id="username" name="username" value="<?php echo htmlspecialchars($username); ?>" placeholder="Enter your username">
-            </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="text" class="form-control" id="password" placeholder="Enter your password"> 
-            </div>
-            <div class="mb-3">
-                <label for="confirm" class="form-label">Confirm Password</label>
-                <input type="text" class="form-control" id="confirm" placeholder="Confirm your password">
-            </div>
-        </fieldset>
-        <div class="btn-group" role="group">
+            <?php if ($error): ?>
+                <p style="color: red;"><?php echo htmlspecialchars($error); ?></p>
+            <?php endif; ?>
+            <div class="border rounded p-4 shadow-sm" style="max-width: 400px; margin: auto;">    
+            <form action="registrieren.php" method="post" id="registerForm" class="needs-validation" novalidate>
+    <fieldset>
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" name="username" 
+                   value="<?php echo htmlspecialchars($username); ?>" 
+                   placeholder="Enter your username" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password" 
+                   placeholder="Enter your password" required>
+        </div>
+        <div class="mb-3">
+            <label for="confirm" class="form-label">Confirm Password</label>
+            <input type="password" class="form-control" id="confirm" name="confirm" 
+                   placeholder="Confirm your password" required>
+        </div>
+    </fieldset>
+    <div class="btn-group d-flex justify-content-between" role="group">
         <button type="button" class="btn btn-secondary" onclick="window.location.href='login.php'">Cancel</button>
         <button type="submit" class="btn btn-primary">Create Account</button>
-    </form>
+    </div>
+</form>
+
+        </div>
+
     </div>
     <!-- Notwendige JavaScript-Abhängigkeiten -->
-     <script src='https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js' crossorigin='anonymous'></script>
+    <script src='https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js' crossorigin='anonymous'></script>
     <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js' crossorigin='anonymous'></script>
     <script src="aScript.js"></script>
-     
 </body>
 
 </html>
