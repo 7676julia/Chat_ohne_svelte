@@ -82,7 +82,8 @@ if ($action === "add") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="app.css">
+   <!-- CSS-Framework von Bootstrap -->
+   <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css' rel='stylesheet' crossorigin='anonymous'>
    
 </head>
 <body>
@@ -124,7 +125,12 @@ if ($action === "add") {
     </datalist>
     <button id="send-request-button">Add Friend</button>
     </form>
+    
 </div>
- <script src="frendesliste.js"></script>
+<!-- Notwendige JavaScript-Abhängigkeiten -->
+     <script src='https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js' crossorigin='anonymous'></script>
+    <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js' crossorigin='anonymous'></script>
+ <script src="frendesliste.js"></script> 
+ 
 </body>
 </html>
