@@ -79,13 +79,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="text" class="form-control" id="confirm" placeholder="Confirm your password">
             </div>
         </fieldset>
-        <div class="button-container">
-            <button type="button" onclick="window.location.href='login.php'">Cancel</button>
-            <button type="submit">Create Account</button>
         <div class="btn-group" role="group">
         <button type="button" class="btn btn-secondary" onclick="window.location.href='login.php'">Cancel</button>
         <button type="submit" class="btn btn-primary">Create Account</button>
-        </div>
     </form>
     </div>
     <!-- Notwendige JavaScript-Abhängigkeiten -->
