@@ -14,9 +14,8 @@ function handleFriends(friends) {
     friendsList.innerHTML = "";
     friendRequests.innerHTML = "";
 
-    for (var friend of friends) {
-        if (friend.status === "accepted");
-        {
+    friends.forEach(friend => {
+        if (friend.status === "accepted") {
             let listItem = document.createElement("li");
             let link = document.createElement("a");
 
@@ -36,8 +35,9 @@ function handleFriends(friends) {
 
             friendRequests.appendChild(listItem);
         }
-    }
+    });
 }
+
 
 // Lade Freunde mit Ajax
 function loadFriends() {
@@ -137,32 +137,45 @@ function createFriendActionButtons(friend, listItem) {
     });
 }
 
-//friend request mit ajax
+document.getElementById("send-request-button").addEventListener("click", function (event) {
+    event.preventDefault(); // Prevent form submission
+
+    const friendRequestName = document.getElementById("friend-request-name").value;
+    if (!friendRequestName) {
+        alert("Please enter a friend name!");
+        return;
+    }
+
+    sendFriendRequest(friendRequestName);
+});
+
 const sendFriendRequest = (friendUsername) => {
-    fetch('path/to/your/ajax/file.php', {
+    const formData = new FormData();
+    formData.append('action', 'add');
+    formData.append('friend', friendUsername);
+
+    fetch('ajax_friend_action.php', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            action: 'add',
-            friend: friendUsername
-        })
+        body: formData
     })
     .then(response => {
         if (!response.ok) {
             throw new Error(`Error: ${response.status}`);
         }
-        return response.json();
+        return response.text();
     })
-    .then(data => {
-        // Handle successful friend request (e.g., update UI)
-        console.log('Friend request sent successfully');
+    .then(() => {
+        alert(`Friend request sent to ${friendUsername}`);
+        loadFriends(); // Freundesliste neu laden
+        document.getElementById("friend-request-name").value = ""; // Input-Feld leeren
     })
     .catch(error => {
-        console.error('Error sending friend request:', error);
+        console.error('Error sending friend request:', error.message);
+        alert('Failed to send friend request. Please try again.');
     });
 };
+
+
 
 /*//add friend button event listener
 document.getElementById("send-request-button").addEventListener("click", function () {
