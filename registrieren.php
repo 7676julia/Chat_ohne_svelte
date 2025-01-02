@@ -1,5 +1,5 @@
 <?php
-var_dump($_POST);
+//var_dump($_POST);
 require("start.php");
 require_once __DIR__ . '/Utils/BackendService.php';
 
@@ -15,31 +15,32 @@ $collectionId = "1234"; // Beispiel-ID
 $backendService = new BackendService($baseUrl, $collectionId);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (empty($username)) {
-        $error = "Bitte geben Sie einen Nutzernamen ein.";
-    }
-    elseif(strlen($username) < 3 ){
-        $error = "Der Nutzername muss mindestens 3 Zeichen lang sein.";
+    $username = trim($_POST['username'] ?? '');
+    $password = trim($_POST['password'] ?? '');
+    $confirmPassword = trim($_POST['confirmPassword'] ?? '');
+
+    if (empty($username) || strlen($username) < 3) {
+        $usernameError = "Der Nutzername muss mindestens 3 Zeichen lang sein.";
     } elseif (empty($password)) {
-        $error = "Bitte geben Sie ein Passwort ein.";
-    }elseif (strlen($password) < 8){
-        $error = "Das Passwort muss mindestens 8 Zeichen lang sein.";
-    }elseif ($password !== $confirm) {
-        $error = "Die Passwörter stimmen nicht überein.";
-    }elseif ($backendService->loadUser($username)) { 
-        $error = "Der Nutzername ist bereits vergeben.";
-    }else {
-        // Registrierung ausführen
-        if ($backendService->login($username, $password)) {
-            $_SESSION['user'] = $username;
-            header("Location: login.php");
-            exit();
-            } else {
-                $error = "Die Registrierung ist fehlgeschlagen.";
+        $passwordError = "Bitte geben Sie ein Passwort ein.";
+    } elseif (strlen($password) < 8) {
+        $passwordError = "Das Passwort muss mindestens 8 Zeichen lang sein.";
+    } elseif ($password !== $confirmPassword) {
+        $confirmPasswordError = "Die Passwörter stimmen nicht überein.";
+    } elseif ($backendService->loadUser($username)) {
+        $usernameError = "Der Nutzername ist bereits vergeben.";
+    } else {
+        if ($backendService->register($username, $password)) {
+            $user = $backendService->loadUser($username);
+            if ($user) {
+                $_SESSION['user'] = $username;
+                header("Location: friends.php");
+                exit();
             }
         }
+        $usernameError = "Die Registrierung ist fehlgeschlagen.";
     }
-
+}
 ?>
 
 <!DOCTYPE html>
@@ -63,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php endif; ?>
 
     <div class="container">
-    <form action="register.php" method="post" id="registerForm" novalidate>
+    <form action="registrieren.php" method="post" id="registerForm" novalidate>
         <fieldset>
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
@@ -78,6 +79,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="text" class="form-control" id="confirm" placeholder="Confirm your password">
             </div>
         </fieldset>
+        <div class="button-container">
+            <button type="button" onclick="window.location.href='login.php'">Cancel</button>
+            <button type="submit">Create Account</button>
         <div class="btn-group" role="group">
         <button type="button" class="btn btn-secondary" onclick="window.location.href='login.php'">Cancel</button>
         <button type="submit" class="btn btn-primary">Create Account</button>
