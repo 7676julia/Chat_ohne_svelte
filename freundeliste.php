@@ -59,6 +59,18 @@ foreach ($allUsers as $user) {
     }
 }
 
+//handle friend request
+if ($action === "add") {
+    $result = $service->friendRequest(new Model\Friend($friend));
+    if ($result) {
+        http_response_code(200);
+        header('Content-Type: application/json');
+        echo json_encode(["message" => "Friend request sent successfully"]);
+        return;
+    }
+}
+
+
 
 ?>
 

@@ -1,4 +1,5 @@
 <?php
+
 require "start.php";
 
 if (!isset($_SESSION['user'])) {
