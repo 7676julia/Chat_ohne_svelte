@@ -4,7 +4,7 @@ if (!isset($_SESSION['user']) || empty($_SESSION['user'])){
     header("Location: login.php");
     exit();
 }
-//verzweiflung ist verzweifelt
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (isset($_POST['aktion'], $_POST['username'])) {
         $aktion = $_POST['aktion'];
@@ -103,7 +103,6 @@ if ($action === "add") {
     </ul>
     
     <hr>
-
     <div>
     <form>
     <label for="friend-request-name">Add Friend</label>
