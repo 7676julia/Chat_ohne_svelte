@@ -61,12 +61,12 @@ try {
             <a href="freundeliste.php" class="btn btn-secondary">
                 &lt; Back to Chat
             </a>
-            <?php if ($isFriend): ?>
+            <!-- <?php if ($isFriend): ?>
                 <a href="freundeliste.php?action=remove&friend=<?= urlencode($profileUsername) ?>" class="btn btn-danger"
                     onclick="return confirm('Are you sure you want to remove this friend?');">
                     Remove Friend
                 </a>
-            <?php endif; ?>
+            <?php endif; ?> -->
         </div>
 
         <div class="row align-items-start">
