@@ -26,13 +26,16 @@ function handleFriends(friends) {
             link.textContent = friend.username;
 
             listItem.appendChild(link);
+            
+            
             friendsList.appendChild(listItem);
         }
 
         if (friend.status === "requested") {
             let listItem = document.createElement("li");
             listItem.textContent = friend.username;
-
+            // Buttons für Freundschaftsanfragen hinzufügen
+            createFriendActionButtons(friend, listItem);
             friendRequests.appendChild(listItem);
         }
     });
@@ -96,17 +99,18 @@ function loadUsers() {
 // Funktion zum Ausführen von Freundschaftsaktionen
 async function friendAction(action, friend) {
     try {
+        const formData = new FormData();
+        formData.append('action', action);  // 'aktion' statt 'action'
+        formData.append('friend', friend); // 'username' statt 'friend'
+
         const response = await fetch('ajax_friend_action.php', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ action, friend })
+            body: formData
         });
 
         if (response.ok) {
             alert(`Action "${action}" for friend "${friend}" was successful!`);
-            loadFriends(); // Aktualisiert die UI dynamisch
+            loadFriends(); 
         } else {
             const error = await response.json();
             alert(`Error: ${error.message}`);

@@ -113,10 +113,13 @@ if ($action === "add") {
     </ul>
 
     <hr>
-    <div class="input-group border rounded input-group-sm mb-3">
+    <h2>New Requests</h2>
+    <ul id = "friend-requests">
+        
 
-        <ul id = "friend-requests"></ul>
-    </div>
+    </ul>
+    
+    <hr>
 
     <div>
     <div class="input-group border rounded mb-3">
