@@ -1,15 +1,21 @@
+// Freundeliste.js - Modified to use Modal for Friend Requests
+
 // Constants and State Management
-const REFRESH_INTERVAL = 1000; // 2 seconds
+const REFRESH_INTERVAL = 1000; // 1 second
 const TOAST_TYPES = {
     SUCCESS: "success",
     ERROR: "error",
 };
+
+// Variable to store the currently selected friend for modal actions
+let currentFriendUsername = null;
 
 // Initialize UI components
 document.addEventListener("DOMContentLoaded", () => {
     initializeToasts();
     loadInitialData();
     startRefreshCycle();
+    setupModalEventListeners();
 });
 
 function loadInitialData() {
@@ -33,38 +39,31 @@ function loadAllUsers() {
             console.error("Error loading users:", error);
             const usersList = document.getElementById("all-users-list");
             usersList.innerHTML = `
-            <div class="list-group-item text-danger">
-                Error loading users. Please try again later.
-            </div>
-        `;
+                <div class="list-group-item text-danger">
+                    Error loading users. Please try again later.
+                </div>
+            `;
         });
 }
 
 function getCurrentFriendsList() {
-    const friendsElements = document.querySelectorAll(
-        "#friends-list .friend-item",
-    );
-    return Array.from(friendsElements).map((el) => {
-        return {
-            username: el.getAttribute("data-friend"),
-            status: "accepted",
-        };
-    });
+    const friendsElements = document.querySelectorAll("#friends-list .friend-item");
+    return Array.from(friendsElements).map((el) => ({
+        username: el.getAttribute("data-friend"),
+        status: "accepted",
+    }));
 }
 
 function getFriendshipStatus(username, friendsList) {
     const friend = friendsList.find((f) => f.username === username);
-    if (!friend) return "none";
-    return friend.status;
+    return friend ? friend.status : "none";
 }
 
 function displayAllUsers(users) {
     const usersList = document.getElementById("all-users-list");
     const currentUser = document.body.getAttribute("data-current-user");
 
-    // Get current friends list to check friendship status
     const friendsList = getCurrentFriendsList();
-
     usersList.innerHTML = "";
 
     if (users.length === 0) {
@@ -77,17 +76,14 @@ function displayAllUsers(users) {
     }
 
     users.forEach((user) => {
-        // Skip current user
         if (user === currentUser) return;
 
         const listItem = document.createElement("div");
-        listItem.className =
-            "list-group-item d-flex justify-content-between align-items-center";
+        listItem.className = "list-group-item d-flex justify-content-between align-items-center";
 
-        // Check if user is already a friend
         const friendshipStatus = getFriendshipStatus(user, friendsList);
-
         let actionButton = "";
+
         switch (friendshipStatus) {
             case "none":
                 actionButton = `
@@ -160,10 +156,7 @@ function showToast(message, type = TOAST_TYPES.SUCCESS) {
 // API Functions
 async function makeRequest(url, method = "GET", data = null) {
     try {
-        const options = {
-            method,
-            headers: {},
-        };
+        const options = { method, headers: {} };
 
         if (data) {
             if (data instanceof FormData) {
@@ -229,7 +222,6 @@ function updateUserSelector(users) {
 
     dataList.innerHTML = "";
     users.forEach((user) => {
-        // Skip the current user
         if (document.body.getAttribute("data-current-user") === user) return;
         const option = document.createElement("option");
         option.value = user;
@@ -247,10 +239,7 @@ async function friendAction(action, friend) {
         showToast(`Friend ${action} successful!`);
         await loadFriends();
     } catch (error) {
-        showToast(
-            error.message || "Failed to process request",
-            TOAST_TYPES.ERROR,
-        );
+        showToast(error.message || "Failed to process request", TOAST_TYPES.ERROR);
     }
 }
 
@@ -287,12 +276,14 @@ function handleFriends(friends) {
 
     const existingElements = {
         friends: new Map(
-            Array.from(friendsList.querySelectorAll(".friend-item"))
-                .map((item) => [item.getAttribute("data-friend"), item]),
+            Array.from(friendsList.querySelectorAll(".friend-item")).map(
+                (item) => [item.getAttribute("data-friend"), item],
+            ),
         ),
         requests: new Map(
-            Array.from(friendRequests.querySelectorAll(".friend-item"))
-                .map((item) => [item.getAttribute("data-friend"), item]),
+            Array.from(friendRequests.querySelectorAll(".friend-item")).map(
+                (item) => [item.getAttribute("data-friend"), item],
+            ),
         ),
     };
 
@@ -335,8 +326,8 @@ const sendFriendRequest = (friendUsername) => {
         })
         .then(() => {
             alert(`Friend request sent to ${friendUsername}`);
-            loadFriends(); // Freundesliste neu laden
-            document.getElementById("friend-request-name").value = ""; // Input-Feld leeren
+            loadFriends(); // Reload friends list
+            document.getElementById("friend-request-name").value = ""; // Clear input
         })
         .catch((error) => {
             console.error("Error sending friend request:", error.message);
@@ -430,9 +421,7 @@ function createAcceptedFriendHTML(friend, username) {
                     <i class="bi bi-chat-dots"></i> Chat
                 </button>
                 <button class="btn btn-outline-danger btn-sm" 
-                        onclick="removeFriend('${
-        escapeHtml(friend.username)
-    }')">
+                        onclick="removeFriend('${escapeHtml(friend.username)}')">
                     <i class="bi bi-person-x"></i> Remove
                 </button>
             </div>
@@ -442,22 +431,68 @@ function createAcceptedFriendHTML(friend, username) {
 
 function createRequestedFriendHTML(friend) {
     return `
-        <div class="d-flex align-items-center justify-content-between">
-            <span class="friend-name">${escapeHtml(friend.username)}</span>
-            <div class="friend-actions">
-                <button class="btn btn-success btn-sm" 
-                        onclick="friendAction('accept', '${
-        escapeHtml(friend.username)
-    }')">
-                    <i class="bi bi-check-lg"></i> Accept
-                </button>
-                <button class="btn btn-danger btn-sm" 
-                        onclick="friendAction('dismiss', '${
-        escapeHtml(friend.username)
-    }')">
-                    <i class="bi bi-x-lg"></i> Reject
-                </button>
+        <div class="d-flex align-items-center justify-content-between friend-request-item w-100 p-3 border rounded mb-2" 
+             onclick="openFriendRequestModal('${escapeHtml(friend.username)}')"
+             style="transition: all 0.2s ease-in-out; cursor: pointer;">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-person-plus me-2"></i>
+                <span class="friend-name fw-semibold">${escapeHtml(friend.username)}</span>
+            </div>
+            <div class="d-flex align-items-center">
+                <span class="badge bg-warning px-3 py-2">
+                    <i class="bi bi-gear me-1"></i>
+                    Manage Request
+                </span>
             </div>
         </div>
+        <style>
+            .friend-request-item {
+                background-color: #fff;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            }
+            .friend-request-item:hover {
+                background-color: #f8f9fa;
+                transform: translateX(5px);
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            }
+            .friend-request-item:active {
+                transform: scale(0.98);
+            }
+            .friend-request-item:hover .badge {
+                transform: scale(1.05);
+            }
+            .friend-request-item .badge {
+                transition: all 0.2s ease;
+            }
+        </style>
     `;
+}
+
+// Function to open the friend request modal
+function openFriendRequestModal(friendUsername) {
+    currentFriendUsername = friendUsername;
+    document.getElementById('modalFriendName').textContent = friendUsername;
+    const modal = new bootstrap.Modal(document.getElementById('friendRequestModal'));
+    modal.show();
+}
+
+// Setup event listeners for modal buttons
+function setupModalEventListeners() {
+    document.getElementById('acceptFriendButton').addEventListener('click', () => {
+        if (currentFriendUsername) {
+            friendAction('accept', currentFriendUsername);
+            currentFriendUsername = null;
+            const modal = bootstrap.Modal.getInstance(document.getElementById('friendRequestModal'));
+            modal.hide();
+        }
+    });
+
+    document.getElementById('declineFriendButton').addEventListener('click', () => {
+        if (currentFriendUsername) {
+            friendAction('decline', currentFriendUsername);
+            currentFriendUsername = null;
+            const modal = bootstrap.Modal.getInstance(document.getElementById('friendRequestModal'));
+            modal.hide();
+        }
+    });
 }
