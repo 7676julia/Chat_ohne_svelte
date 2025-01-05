@@ -4,7 +4,7 @@ if (!isset($_SESSION['user']) || empty($_SESSION['user'])){
     header("Location: login.php");
     exit();
 }
-//verzweiflung ist verzweifelt
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (isset($_POST['aktion'], $_POST['username'])) {
         $aktion = $_POST['aktion'];
@@ -14,11 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         } elseif ($aktion === "ablehnen") {
             $dismiss = $service->friendDismiss($username);
         }
-    } else {
-        echo "Missing action or username!";
-    }
-} else {
-    echo "No action received!";
+    } 
 }
 
 
@@ -83,52 +79,78 @@ if ($action === "add") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
    <!-- CSS-Framework von Bootstrap -->
-   <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css' rel='stylesheet' crossorigin='anonymous'>
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+        .card {
+            border: none;
+            background-color: white;
+        }
+        .form-control:focus {
+            box-shadow: none;
+            border-color: #0d6efd;
+        }
+    </style>
    
 </head>
 <body>
-<body data-current-user="<?php echo htmlspecialchars($_SESSION['user']); ?>">
-    <h1>Friends</h1>
-    <a href="logout.php" Logout> &lt; Logout</a> | <a href="einstellungen.php">Settings</a>
-    <hr>
-    <ul id = "friends-list">
+<div class="container mt-4 d-flex justify-content-center">
+    <div class="col-md-4">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <body data-current-user="<?php echo htmlspecialchars($_SESSION['user']); ?>">
+    <h3>Friends</h3>
+    <div class="btn-group d-flex justify-content-between" role="group">
+        <a href="logout.php" Logout class="btn btn-secondary"> &lt; Logout</a>  <a href="einstellungen.php" class="btn btn-secondary">Settings</a>
+    </div>
+        <hr>
+    <ul id = "friends-list" style = none;>
         
     </ul>
 
     <hr>
-    <h2>New Requests</h2>
-    <ul id = "friend-requests">
-        
+    <div class="input-group border rounded input-group-sm mb-3">
 
-    </ul>
-    
-    <hr>
+        <ul id = "friend-requests"></ul>
+    </div>
 
     <div>
-    <form>
-    <label for="friend-request-name">Add Friend</label>
-    
-    <input 
-        type="text" 
-        placeholder="Add Friend to List" 
-        id="friend-request-name" 
-        list="friend-selector" 
-        name = "friendRequestName"
-        required
-    >
+    <div class="input-group border rounded mb-3">
+        <input type="text"  id="friend-request-name" list="friend-selector" name = "friendRequestName" class="form-control" placeholder="Add friend to list" aria-label="Add" aria-describedby="button-addon2">
+        <button id="send-request-button" class="btn btn-primary" type="button" id="button-addon2">Add</button>
+    </div>  
     <datalist id="friend-selector">
         <?php 
         foreach ($potentialFriends as $potentialFriend) {
-            echo "<option value='" . htmlspecialchars($potentialFriend) . "'>";
+            //echo "<option value='" . htmlspecialchars($potentialFriend) . "'>";
         }
         ?>
     </datalist>
-    <button id="send-request-button">Add Friend</button>
-    </form>
     
 </div>
+
+<div class="modal fade" id="friendRequestModal" tabindex="-1" aria-labelledby="friendRequestModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="friendRequestModalLabel">Friend Request</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Would you like to accept the friend request from <span id="requestUsername"></span>?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="handleFriendRequest('dismiss')">Deny</button>
+                    <button type="button" class="btn btn-success" onclick="handleFriendRequest('accept')">Accept</button>
+                </div>
+            </div>
+        </div>
+    </div>
 <!-- Notwendige JavaScript-Abhängigkeiten -->
-     <script src='https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js' crossorigin='anonymous'></script>
     <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js' crossorigin='anonymous'></script>
  <script src="frendesliste.js"></script> 
  
