@@ -10,6 +10,8 @@ class User implements JsonSerializable {
     private $description;
     private $chatLayout;
     private $changeHistory = array();
+    private $status; // Add this for friend status if needed
+    private $unread; // Add this for unread messages if needed
 
     public function __construct($username = null) {
         $this->username = $username;
@@ -74,8 +76,11 @@ class User implements JsonSerializable {
 
     public static function fromJson($data) {
         $user = new User();
+        // Only set properties that are declared in the class
         foreach ($data as $key => $value) {
-            $user->{$key} = $value;
+            if (property_exists($user, $key)) {
+                $user->{$key} = $value;
+            }
         }
         return $user;
     }
