@@ -1,4 +1,6 @@
 <?php
+// /home/nikita/Projects/UNI/WTP/chat.php
+
 require("start.php");
 if (!isset($_SESSION['user']) || empty($_SESSION['user'])){
     header("Location: login.php");
@@ -11,6 +13,10 @@ if (!isset($_GET['friend']) || empty($_GET['friend'])){
 
 // Get the friend parameter and sanitize it
 $friend = htmlspecialchars($_GET['friend']); // Define the friend variable properly
+
+// Load current user data
+$currentUser = $service->loadUser($_SESSION['user']);
+$chatLayout = $currentUser->getChatLayout();
 ?>
 
 <!DOCTYPE html>
@@ -35,9 +41,23 @@ $friend = htmlspecialchars($_GET['friend']); // Define the friend variable prope
         .chat-input {
             resize: none;
         }
+        .one-line .username {
+            display: inline;
+            font-weight: bold;
+        }
+        .one-line .message {
+            display: inline;
+        }
+        .two-lines .username {
+            display: block;
+            font-weight: bold;
+        }
+        .two-lines .message {
+            display: block;
+        }
     </style>
 </head>
-<body class="bg-light">
+<body class="bg-light <?= $chatLayout ?>">
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
         <div class="container">
@@ -64,7 +84,7 @@ $friend = htmlspecialchars($_GET['friend']); // Define the friend variable prope
 
         <!-- Messages Container -->
         <div class="card mb-4">
-            <div class="card-body message-container" id="message-container">
+            <div class="card-body message-container" id="message-container" data-chat-layout="<?= $chatLayout ?>">
                 <!-- Messages will be dynamically inserted here -->
             </div>
         </div>
@@ -91,6 +111,7 @@ $friend = htmlspecialchars($_GET['friend']); // Define the friend variable prope
     <script>
         // Add currentUser to window scope for chat.js
         window.currentUser = <?= json_encode($_SESSION['user']) ?>;
+        window.chatLayout = <?= json_encode($chatLayout) ?>;
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="chat.js"></script>
