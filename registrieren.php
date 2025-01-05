@@ -1,9 +1,6 @@
 <?php
 //var_dump($_POST);
 require("start.php");
-require_once __DIR__ . '/Utils/BackendService.php';
-
-use Utils\BackendService;
 
 $error = ""; 
 $username = isset($_POST['username']) ? trim($_POST['username']) : '';
@@ -11,8 +8,6 @@ $password = isset($_POST['password']) ? trim($_POST['password']) : '';
 $confirm = isset($_POST['confirm']) ? trim($_POST['confirm']) : '';
 
 $baseUrl = "http://localhost/api"; // Beispiel-URL
-$collectionId = "1234"; // Beispiel-ID
-$backendService = new BackendService($baseUrl, $collectionId);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
@@ -27,14 +22,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $passwordError = "Das Passwort muss mindestens 8 Zeichen lang sein.";
     } elseif ($password !== $confirmPassword) {
         $confirmPasswordError = "Die Passwörter stimmen nicht überein.";
-    } elseif ($backendService->loadUser($username)) {
+    } elseif ($service->loadUser($username)) {
         $usernameError = "Der Nutzername ist bereits vergeben.";
     } else {
-        if ($backendService->register($username, $password)) {
-            $user = $backendService->loadUser($username);
+        if ($service->register($username, $password)) {
+            $user = $service->loadUser($username);
             if ($user) {
                 $_SESSION['user'] = $username;
-                header("Location: friends.php");
+                header("Location: freundeliste.php");
                 exit();
             }
         }
